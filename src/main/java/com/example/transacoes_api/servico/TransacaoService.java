@@ -1,20 +1,21 @@
-package com.example.transacoesapi.servico;
+package com.example.transacoes_api.servico;
 
-import com.example.transacoesapi.dto.EstatisticaDTO;
-import com.example.transacoesapi.modelo.Transacao;
-import com.example.transacoesapi.repositorio.TransacaoRepository;
+import com.example.transacoes_api.dto.EstatisticaDTO;
+import com.example.transacoes_api.modelo.Transacao;
+import com.example.transacoes_api.repositorio.TransacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
 public class TransacaoService {
 
     private final TransacaoRepository repository;
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss.nnnnnnn");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     @Autowired
     public TransacaoService(TransacaoRepository repository) {
@@ -78,7 +79,7 @@ public class TransacaoService {
         return new EstatisticaDTO(count, sum, avg, min, max);
     }
 
-    public boolean validarDataTransacao(String dataHoraStr) {
+    public boolean validarDataTransacao(String dataHoraStr) throws DateTimeParseException {
         LocalDateTime dataHora = LocalDateTime.parse(dataHoraStr, formatter);
         return !dataHora.isAfter(LocalDateTime.now());
     }
