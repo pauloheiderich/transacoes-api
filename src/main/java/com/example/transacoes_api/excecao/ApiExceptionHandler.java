@@ -1,4 +1,4 @@
-package com.example.transacoesapi.excecao;
+package com.example.transacoes_api.excecao;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
