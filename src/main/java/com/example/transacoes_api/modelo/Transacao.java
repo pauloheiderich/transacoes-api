@@ -1,4 +1,4 @@
-package com.example.transacoesapi.modelo;
+package com.example.transacoes_api.modelo;
 
 import java.time.LocalDateTime;
 
