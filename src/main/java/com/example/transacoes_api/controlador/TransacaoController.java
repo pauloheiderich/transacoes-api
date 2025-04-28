@@ -1,10 +1,10 @@
-package com.example.transacoesapi.controlador;
+package com.example.transacoes_api.controlador;
 
-import com.example.transacoesapi.dto.EstatisticaDTO;
-import com.example.transacoesapi.dto.PeriodoDTO;
-import com.example.transacoesapi.dto.TransacaoDTO;
-import com.example.transacoesapi.modelo.Transacao;
-import com.example.transacoesapi.servico.TransacaoService;
+import com.example.transacoes_api.dto.EstatisticaDTO;
+import com.example.transacoes_api.dto.PeriodoDTO;
+import com.example.transacoes_api.dto.TransacaoDTO;
+import com.example.transacoes_api.modelo.Transacao;
+import com.example.transacoes_api.servico.TransacaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
