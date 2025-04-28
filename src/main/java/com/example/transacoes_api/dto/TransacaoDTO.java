@@ -1,8 +1,7 @@
-package com.example.transacoesapi.dto;
+package com.example.transacoes_api.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import java.time.LocalDateTime;
 
 public class TransacaoDTO {
     @NotNull
