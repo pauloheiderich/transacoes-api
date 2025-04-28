@@ -1,10 +1,9 @@
-package com.example.transacoesapi.repositorio;
+package com.example.transacoes_api.repositorio;
 
-import com.example.transacoesapi.modelo.Transacao;
+import com.example.transacoes_api.modelo.Transacao;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
