@@ -1,4 +1,4 @@
-package com.example.transacoesapi.dto;
+package com.example.transacoes_api.dto;
 
 public class EstatisticaDTO {
     private long count;
