@@ -1,1 +1,2 @@
-# API de Transações Financeiras 
+# API de Transações Financeiras
+feito por: Paulo e Tawã
