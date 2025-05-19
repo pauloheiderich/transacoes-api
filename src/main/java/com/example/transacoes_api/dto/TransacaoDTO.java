@@ -1,15 +1,33 @@
 package com.example.transacoes_api.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
-public class TransacaoDTO {
-    @NotNull
-    @PositiveOrZero
-    private Double valor;
+public class TransacaoDTO extends RequisicaoComBancoDTO {
+    @NotBlank
+    private String nome;
     
-    @NotNull
+    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")
+    private String cpf;
+    
+    private Double valor;
     private String dataHora;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
 
     public Double getValor() {
         return valor;
