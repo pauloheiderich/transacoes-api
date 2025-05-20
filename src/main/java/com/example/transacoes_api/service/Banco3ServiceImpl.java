@@ -14,52 +14,45 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class Banco2ServiceImpl implements TransacaoService {
+public class Banco3ServiceImpl implements TransacaoService {
     private final TransacaoRepository repository;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
     
-    public Banco2ServiceImpl(TransacaoRepository repository) {
+    public Banco3ServiceImpl(TransacaoRepository repository) {
         this.repository = repository;
     }
     
     @Override
     public void registrarTransacao(TransacaoDTO dto) {
-        // Banco 2 aceita apenas transações do ano de 2025
-        LocalDateTime dataHora = LocalDateTime.parse(dto.getDataHora(), formatter);
-        if (dataHora.getYear() != 2025) {
-            throw new IllegalArgumentException("Banco 2 aceita apenas transações de 2025");
-        }
-        
         Transacao transacao = new Transacao();
         transacao.setNome(dto.getNome());
         transacao.setCpf(dto.getCpf());
         transacao.setValor(dto.getValor());
-        transacao.setDataHora(dataHora);
-        transacao.setBanco("banco2");
+        transacao.setDataHora(LocalDateTime.parse(dto.getDataHora(), formatter));
+        transacao.setBanco("banco3");
         
         repository.save(transacao);
     }
     
     @Override
     public void limparTransacoes(RequisicaoComBancoDTO dto) {
-        repository.deleteByBanco("banco2");
+        repository.deleteByBanco("banco3");
     }
     
     @Override
     public void excluirPorPeriodo(PeriodoRequestDTO dto) {
-        if (!"BD2@456".equals(dto.getSenha())) {
-            throw new SecurityException("Senha inválida para o Banco 2");
+        if (!"BD3@789".equals(dto.getSenha())) {
+            throw new SecurityException("Senha inválida para o Banco 3");
         }
         
         LocalDateTime dataInicial = LocalDateTime.parse(dto.getDataInicial(), formatter);
         LocalDateTime dataFinal = LocalDateTime.parse(dto.getDataFinal(), formatter);
-        repository.deleteByBancoAndDataHoraBetween("banco2", dataInicial, dataFinal);
+        repository.deleteByBancoAndDataHoraBetween("banco3", dataInicial, dataFinal);
     }
     
     @Override
     public EstatisticaResponseDTO estatisticasRecentes(RequisicaoComBancoDTO dto) {
-        // Ignora transações acima de R$1.000,00
-        List<Transacao> transacoes = repository.findByBancoAndValorLessThan("banco2", 1000.0);
+        List<Transacao> transacoes = repository.findByBanco("banco3");
         return calcularEstatisticas(transacoes);
     }
     
@@ -67,15 +60,15 @@ public class Banco2ServiceImpl implements TransacaoService {
     public EstatisticaResponseDTO estatisticasPorPeriodo(PeriodoRequestDTO dto) {
         LocalDateTime dataInicial = LocalDateTime.parse(dto.getDataInicial(), formatter);
         LocalDateTime dataFinal = LocalDateTime.parse(dto.getDataFinal(), formatter);
-        List<Transacao> transacoes = repository.findByBancoAndDataHoraBetweenAndValorLessThan(
-                "banco2", dataInicial, dataFinal, 1000.0);
+        List<Transacao> transacoes = repository.findByBancoAndDataHoraBetween(
+                "banco3", dataInicial, dataFinal);
         
         return calcularEstatisticas(transacoes);
     }
     
     @Override
     public TransacaoResponseDTO consultarUltima(RequisicaoComBancoDTO dto) {
-        Transacao ultima = repository.findTopByBancoOrderByDataHoraDesc("banco2");
+        Transacao ultima = repository.findTopByBancoOrderByDataHoraDesc("banco3");
         return transacaoToDTO(ultima);
     }
     

@@ -5,11 +5,10 @@ import com.example.transacoes_api.dto.PeriodoRequestDTO;
 import com.example.transacoes_api.dto.RequisicaoComBancoDTO;
 import com.example.transacoes_api.dto.TransacaoDTO;
 import com.example.transacoes_api.dto.TransacaoResponseDTO;
-import com.example.transacoes_api.modelo.Transacao;
-import com.example.transacoes_api.repositorio.TransacaoRepository;
+import com.example.transacoes_api.model.Transacao;
+import com.example.transacoes_api.repository.TransacaoRepository;
 
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,14 +37,12 @@ public class Banco1ServiceImpl implements TransacaoService {
     
     @Override
     public void limparTransacoes(RequisicaoComBancoDTO dto) {
-        // No Banco 1, limpa apenas transações com mais de 3 anos
         LocalDateTime limiteData = LocalDateTime.now().minusYears(3);
         repository.deleteByBancoAndDataHoraBefore("banco1", limiteData);
     }
     
     @Override
     public void excluirPorPeriodo(PeriodoRequestDTO dto) {
-        // Exige senha BD1@123
         if (!"BD1@123".equals(dto.getSenha())) {
             throw new SecurityException("Senha inválida para o Banco 1");
         }
@@ -57,14 +54,12 @@ public class Banco1ServiceImpl implements TransacaoService {
     
     @Override
     public EstatisticaResponseDTO estatisticasRecentes(RequisicaoComBancoDTO dto) {
-        // Ignora transações abaixo de R$5,00
         List<Transacao> transacoes = repository.findByBancoAndValorGreaterThan("banco1", 5.0);
         return calcularEstatisticas(transacoes);
     }
     
     @Override
     public EstatisticaResponseDTO estatisticasPorPeriodo(PeriodoRequestDTO dto) {
-        // Ignora transações abaixo de R$5,00
         LocalDateTime dataInicial = LocalDateTime.parse(dto.getDataInicial(), formatter);
         LocalDateTime dataFinal = LocalDateTime.parse(dto.getDataFinal(), formatter);
         List<Transacao> transacoes = repository.findByBancoAndDataHoraBetweenAndValorGreaterThan(

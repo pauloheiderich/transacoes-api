@@ -1,5 +1,7 @@
 package com.example.transacoes_api.service;
 
+import org.springframework.stereotype.Component;
+
 @Component
 public class BancoServiceFactory {
     private final Banco1ServiceImpl banco1Service;
