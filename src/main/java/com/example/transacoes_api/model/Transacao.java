@@ -3,7 +3,7 @@ package com.example.transacoes_api.model;
 import java.time.LocalDateTime;
 
 public class Transacao {
-    private Long id;
+    private Integer id;
     private String nome;
     private String cpf;
     private Double valor;
@@ -13,11 +13,11 @@ public class Transacao {
     public Transacao() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

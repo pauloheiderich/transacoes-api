@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Repository
 public class TransacaoRepository {
     private final List<Transacao> transacoes = new CopyOnWriteArrayList<>();
-    private final AtomicLong idCounter = new AtomicLong();
+    private final AtomicInteger idCounter = new AtomicInteger();
     
     public Transacao save(Transacao transacao) {
         if (transacao.getId() == null) {
@@ -22,11 +22,30 @@ public class TransacaoRepository {
         return transacao;
     }
     
+    public Transacao findById(Integer id) {
+        return transacoes.stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public List<Transacao> findByCpf(String cpf) {
+        return transacoes.stream()
+                .filter(t -> t.getCpf().equals(cpf))
+                .collect(Collectors.toList());
+    }
+    
+    public List<Transacao> findByNomeContaining(String nome) {
+        return transacoes.stream()
+                .filter(t -> t.getNome().toLowerCase().contains(nome.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+    
     public void deleteByBanco(String banco) {
         transacoes.removeIf(t -> t.getBanco().equals(banco));
     }
     
-    public void deleteByBancoAndDataHoraBefore(String banco, LocalDateTime data) {
+    public void deleteByBancoAndDataHoreBefore(String banco, LocalDateTime data) {
         transacoes.removeIf(t -> t.getBanco().equals(banco) && t.getDataHora().isBefore(data));
     }
     

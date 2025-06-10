@@ -1,17 +1,17 @@
 package com.example.transacoes_api.dto;
 
 public class TransacaoResponseDTO {
-    private Long id;
+    private Integer id;
     private String nome;
     private String cpf;
     private Double valor;
     private String dataHora;
     
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
     
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     

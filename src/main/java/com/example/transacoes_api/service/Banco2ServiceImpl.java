@@ -24,7 +24,6 @@ public class Banco2ServiceImpl implements TransacaoService {
     
     @Override
     public void registrarTransacao(TransacaoDTO dto) {
-        // Banco 2 aceita apenas transações do ano de 2025
         LocalDateTime dataHora = LocalDateTime.parse(dto.getDataHora(), formatter);
         if (dataHora.getYear() != 2025) {
             throw new IllegalArgumentException("Banco 2 aceita apenas transações de 2025");

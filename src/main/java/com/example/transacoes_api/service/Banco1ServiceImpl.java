@@ -5,6 +5,7 @@ import com.example.transacoes_api.dto.PeriodoRequestDTO;
 import com.example.transacoes_api.dto.RequisicaoComBancoDTO;
 import com.example.transacoes_api.dto.TransacaoDTO;
 import com.example.transacoes_api.dto.TransacaoResponseDTO;
+import com.example.transacoes_api.dto.TransacaoUpdateDTO;
 import com.example.transacoes_api.model.Transacao;
 import com.example.transacoes_api.repository.TransacaoRepository;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class Banco1ServiceImpl implements TransacaoService {
@@ -24,7 +26,6 @@ public class Banco1ServiceImpl implements TransacaoService {
     
     @Override
     public void registrarTransacao(TransacaoDTO dto) {
-        // Validações específicas do Banco 1
         Transacao transacao = new Transacao();
         transacao.setNome(dto.getNome());
         transacao.setCpf(dto.getCpf());
@@ -38,15 +39,11 @@ public class Banco1ServiceImpl implements TransacaoService {
     @Override
     public void limparTransacoes(RequisicaoComBancoDTO dto) {
         LocalDateTime limiteData = LocalDateTime.now().minusYears(3);
-        repository.deleteByBancoAndDataHoraBefore("banco1", limiteData);
+        repository.deleteByBancoAndDataHoreBefore("banco1", limiteData);
     }
     
     @Override
     public void excluirPorPeriodo(PeriodoRequestDTO dto) {
-        if (!"BD1@123".equals(dto.getSenha())) {
-            throw new SecurityException("Senha inválida para o Banco 1");
-        }
-        
         LocalDateTime dataInicial = LocalDateTime.parse(dto.getDataInicial(), formatter);
         LocalDateTime dataFinal = LocalDateTime.parse(dto.getDataFinal(), formatter);
         repository.deleteByBancoAndDataHoraBetween("banco1", dataInicial, dataFinal);
@@ -72,6 +69,35 @@ public class Banco1ServiceImpl implements TransacaoService {
     public TransacaoResponseDTO consultarUltima(RequisicaoComBancoDTO dto) {
         Transacao ultima = repository.findTopByBancoOrderByDataHoraDesc("banco1");
         return transacaoToDTO(ultima);
+    }
+    
+    @Override
+    public List<TransacaoResponseDTO> buscarPorCpf(String cpf) {
+        return repository.findByCpf(cpf).stream()
+                .filter(t -> "banco1".equals(t.getBanco()))
+                .map(this::transacaoToDTO)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<TransacaoResponseDTO> buscarPorNome(String nome) {
+        return repository.findByNomeContaining(nome).stream()
+                .filter(t -> "banco1".equals(t.getBanco()))
+                .map(this::transacaoToDTO)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public TransacaoResponseDTO atualizarTransacao(Integer id, TransacaoUpdateDTO dto) {
+        Transacao transacao = repository.findById(id);
+        if (transacao == null || !"banco1".equals(transacao.getBanco())) {
+            return null;
+        }
+        
+        transacao.setNome(dto.getNome());
+        transacao.setCpf(dto.getCpf());
+        
+        return transacaoToDTO(transacao);
     }
     
     private EstatisticaResponseDTO calcularEstatisticas(List<Transacao> transacoes) {
