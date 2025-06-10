@@ -23,5 +23,9 @@ public class EstatisticaResponseDTO {
         this.max = max;
     }
     
-    // getters
+    public long getCount() { return count; }
+    public double getSum() { return sum; }
+    public double getAvg() { return avg; }
+    public double getMin() { return min; }
+    public double getMax() { return max; }
 }

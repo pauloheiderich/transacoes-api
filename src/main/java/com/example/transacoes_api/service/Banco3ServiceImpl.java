@@ -5,6 +5,7 @@ import com.example.transacoes_api.dto.PeriodoRequestDTO;
 import com.example.transacoes_api.dto.RequisicaoComBancoDTO;
 import com.example.transacoes_api.dto.TransacaoDTO;
 import com.example.transacoes_api.dto.TransacaoResponseDTO;
+import com.example.transacoes_api.dto.TransacaoUpdateDTO;
 import com.example.transacoes_api.model.Transacao;
 import com.example.transacoes_api.repository.TransacaoRepository;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class Banco3ServiceImpl implements TransacaoService {
@@ -99,5 +101,33 @@ public class Banco3ServiceImpl implements TransacaoService {
         dto.setDataHora(transacao.getDataHora().format(formatter));
         
         return dto;
+    }
+    @Override
+    public List<TransacaoResponseDTO> buscarPorCpf(String cpf) {
+        return repository.findByCpf(cpf).stream()
+                .filter(t -> "banco3".equals(t.getBanco()))
+                .map(this::transacaoToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransacaoResponseDTO> buscarPorNome(String nome) {
+        return repository.findByNomeContaining(nome).stream()
+                .filter(t -> "banco3".equals(t.getBanco()))
+                .map(this::transacaoToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TransacaoResponseDTO atualizarTransacao(Integer id, TransacaoUpdateDTO dto) {
+        Transacao transacao = repository.findById(id);
+        if (transacao == null || !"banco3".equals(transacao.getBanco())) {
+            return null;
+        }
+        
+        transacao.setNome(dto.getNome());
+        transacao.setCpf(dto.getCpf());
+        
+        return transacaoToDTO(transacao);
     }
 }
